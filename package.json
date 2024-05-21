@@ -3,6 +3,7 @@
   "displayName": "Background Image",
   "description": "A fun simple background extension for vscode which allows users to manage their backgrounds with images",
   "version": "0.0.1",
+  "publisher": "lukasolsen",
   "engines": {
     "vscode": "1.88.1"
   },
@@ -19,28 +20,34 @@
         "command": "background-image.helloWorld",
         "title": "Hello World"
       }
-    ]
-  },
-  "config": {
-    "background-image.images": {
-      "type": "array",
-      "default": [
-        "https://lh3.googleusercontent.com/drive-viewer/AKGpihbHfbd-FCo1dYmZwMNnSMIcA4Hz3QGNLFBjRpxAQ4YSpKzir_ysdbx5JOHIfLIodCwH84gu3n1cldFDukF_4a1QeV0bspucGQ=w1960-h4204-rw-v1",
-        "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbOvFqWgq37yAevhF3FPutF6ViXPvRsi0-afasdBDa7kse-o2z9ywDNU9VdqtNBxMF1IoekvXXzHpc5xlDEENxq_O9u5Vo4Gv4=w1920-h945-rw-v1",
-        "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihZVN3jFXgTuZ5fxMJCmzR6d0pYn9mn7xNu9f3uSjFGNFFihWicViiN4oc3Smlv7tpE6iuuCH2eAxUcflDD6McH98nrhHuvPaBI=w1920-h945-rw-v1"
-      ]
-    },
-    "background-image.selectedImage": {
-      "type": "number",
-      "default": 0
-    },
-    "background-image.opacity": {
-      "type": "number",
-      "default": 0.5
-    },
-    "background-image.blur": {
-      "type": "number",
-      "default": 0
+    ],
+    "configuration": {
+      "title": "Background Image",
+      "properties": {
+        "background-image.images": {
+          "type": "array",
+          "default": [
+            "https://lh3.googleusercontent.com/drive-viewer/AKGpihbHfbd-FCo1dYmZwMNnSMIcA4Hz3QGNLFBjRpxAQ4YSpKzir_ysdbx5JOHIfLIodCwH84gu3n1cldFDukF_4a1QeV0bspucGQ=w1960-h4204-rw-v1",
+            "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbOvFqWgq37yAevhF3FPutF6ViXPvRsi0-afasdBDa7kse-o2z9ywDNU9VdqtNBxMF1IoekvXXzHpc5xlDEENxq_O9u5Vo4Gv4=w1920-h945-rw-v1",
+            "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihZVN3jFXgTuZ5fxMJCmzR6d0pYn9mn7xNu9f3uSjFGNFFihWicViiN4oc3Smlv7tpE6iuuCH2eAxUcflDD6McH98nrhHuvPaBI=w1920-h945-rw-v1"
+          ],
+          "description": "List of images to use as background"
+        },
+        "background-image.selectedImage": {
+          "type": "number",
+          "default": 0,
+          "description": "Index of the selected image"
+        },
+        "background-image.opacity": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Opacity of the background image"
+        },
+        "background-image.blur": {
+          "type": "number",
+          "default": 0
+        }
+      }
     }
   },
   "scripts": {
@@ -58,16 +65,22 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.89.0",
+    "@types/lockfile": "^1.0.4",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/stylis": "^4.2.6",
+    "@types/vscode": "^1.89.0",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
-    "eslint": "^8.57.0",
-    "esbuild": "^0.20.2",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.4.5",
     "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.3.9"
+    "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "lockfile": "^1.0.4",
+    "stylis": "^4.3.2"
   }
 }
