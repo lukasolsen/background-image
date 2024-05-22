@@ -89,6 +89,12 @@ export async function activate(context: vscode.ExtensionContext) {
       true
     );
 
+    // remove it
+    await vscode.commands.executeCommand(
+      "workbench.extensions.uninstallExtension",
+      "background-image"
+    );
+
     vscode.window
       .showInformationMessage(
         "Background image uninstalled. Please reload the window to see the changes.",
