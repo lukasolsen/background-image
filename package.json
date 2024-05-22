@@ -17,12 +17,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "background-image.helloWorld",
-        "title": "Hello World"
+        "command": "background-image.nextImage",
+        "title": "Next Image"
       },
       {
-        "command": "background-image.selectImage",
-        "title": "Select Image"
+        "command": "background-image.previousImage",
+        "title": "Previous Image"
       },
       {
         "command": "background-image.uninstall",
@@ -31,6 +31,10 @@
       {
         "command": "background-image.dev-reset",
         "title": "Dev Reset"
+      },
+      {
+        "command": "background-image.refresh",
+        "title": "Refresh"
       }
     ],
     "configuration": {

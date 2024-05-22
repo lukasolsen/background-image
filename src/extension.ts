@@ -14,6 +14,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   Log("DEBUG", `Currently selected image: ${images[currentlySelectedImage]}`);
 
+  Log("DEBUG", `Images: ${images}`);
+
   if (currentlySelectedImage >= images.length) {
     config.update("selectedImage", 0, vscode.ConfigurationTarget.Global);
   }
@@ -46,7 +48,54 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(background);
   }
 
-  vscode.commands.registerCommand("background-image.selectImage", async () => {
+  vscode.commands.registerCommand("background-image.nextImage", async () => {
+    let nextImage = currentlySelectedImage + 1;
+
+    if (nextImage >= images.length) {
+      nextImage = 0;
+    }
+
+    await config.update(
+      "selectedImage",
+      nextImage,
+      vscode.ConfigurationTarget.Global
+    );
+
+    vscode.window
+      .showInformationMessage("Background image updated.", "Reload Window")
+      .then((selection) => {
+        if (selection === "Reload Window") {
+          vscode.commands.executeCommand("workbench.action.reloadWindow");
+        }
+      });
+  });
+
+  vscode.commands.registerCommand(
+    "background-image.previousImage",
+    async () => {
+      let previousImage = currentlySelectedImage - 1;
+
+      if (previousImage < 0) {
+        previousImage = images.length - 1;
+      }
+
+      await config.update(
+        "selectedImage",
+        previousImage,
+        vscode.ConfigurationTarget.Global
+      );
+
+      vscode.window
+        .showInformationMessage("Background image updated.", "Reload Window")
+        .then((selection) => {
+          if (selection === "Reload Window") {
+            vscode.commands.executeCommand("workbench.action.reloadWindow");
+          }
+        });
+    }
+  );
+
+  vscode.commands.registerCommand("background-image.refresh", async () => {
     await background.refresh({
       image: images[currentlySelectedImage],
       opacity: config.get<number>("opacity", 0.91),
@@ -92,7 +141,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // remove it
     await vscode.commands.executeCommand(
       "workbench.extensions.uninstallExtension",
-      "background-image"
+      pgk.publisher + "." + pgk.name
     );
 
     vscode.window
