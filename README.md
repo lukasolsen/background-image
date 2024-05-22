@@ -1,4 +1,4 @@
-# background-image README
+# Background Image
 
 This is the README for your extension "background-image". After writing up a brief description, we recommend including the following sections.
 
