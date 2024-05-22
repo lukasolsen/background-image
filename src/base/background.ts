@@ -48,6 +48,16 @@ export class Background implements Disposable {
     }
   }
 
+  public async refresh(imageOptions: ImageOptions): Promise<void> {
+    try {
+      await this.uninstall();
+      await this.install(imageOptions);
+    } catch (e: any) {
+      Log("ERROR", e.message);
+      unlock();
+    }
+  }
+
   public dispose() {
     this.disposes.forEach((d) => d.dispose());
   }

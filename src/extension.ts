@@ -41,30 +41,44 @@ export async function activate(context: vscode.ExtensionContext) {
 
     await background.install({
       image: images[currentlySelectedImage],
-      opacity: config.get<number>("opacity", 1),
-      blur: config.get<number>("blur", 0),
-      grayscale: config.get<number>("grayscale", 0),
-      contrast: config.get<number>("contrast", 100),
+      opacity: config.get<number>("opacity", 0.91),
     });
     context.subscriptions.push(background);
   }
 
-  vscode.commands.registerCommand("background-image.helloWorld", () => {
-    vscode.window.showInformationMessage("Hello World from Background Image!");
+  vscode.commands.registerCommand("background-image.selectImage", async () => {
+    await background.refresh({
+      image: images[currentlySelectedImage],
+      opacity: config.get<number>("opacity", 0.91),
+    });
+
+    vscode.window
+      .showInformationMessage("Background image updated.", "Reload Window")
+      .then((selection) => {
+        if (selection === "Reload Window") {
+          vscode.commands.executeCommand("workbench.action.reloadWindow");
+        }
+      });
   });
 
-  vscode.commands.registerCommand("background-image.selectImage", () => {
-    vscode.window.showInformationMessage("Select Image from Background Image!");
-  });
-
-  vscode.commands.registerCommand("background-image.nextImage", () => {
-    vscode.window.showInformationMessage("Next Image from Background Image!");
-  });
-
-  vscode.commands.registerCommand("background-image.previousImage", () => {
-    vscode.window.showInformationMessage(
-      "Previous Image from Background Image!"
+  vscode.commands.registerCommand("background-image.dev-reset", async () => {
+    await context.globalState.update(
+      `backgroundImage-${version}-firstTime`,
+      true
     );
+
+    await background.uninstall();
+
+    vscode.window
+      .showInformationMessage(
+        "Development reset. Please reload the window to see the changes.",
+        "Reload Window"
+      )
+      .then((selection) => {
+        if (selection === "Reload Window") {
+          vscode.commands.executeCommand("workbench.action.reloadWindow");
+        }
+      });
   });
 
   vscode.commands.registerCommand("background-image.uninstall", async () => {
@@ -85,6 +99,24 @@ export async function activate(context: vscode.ExtensionContext) {
           vscode.commands.executeCommand("workbench.action.reloadWindow");
         }
       });
+  });
+
+  // check if the user has changed their configuration then do the refresh
+  vscode.workspace.onDidChangeConfiguration(async (event) => {
+    if (event.affectsConfiguration("background-image")) {
+      await background.refresh({
+        image: images[currentlySelectedImage],
+        opacity: config.get<number>("opacity", 0.91),
+      });
+
+      vscode.window
+        .showInformationMessage("Background image updated.", "Reload Window")
+        .then((selection) => {
+          if (selection === "Reload Window") {
+            vscode.commands.executeCommand("workbench.action.reloadWindow");
+          }
+        });
+    }
   });
 }
 

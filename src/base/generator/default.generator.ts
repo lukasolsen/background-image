@@ -10,7 +10,7 @@ const BODY_SELECTOR =
 
 export class DefaultCssGenerator extends AbsCssGenerator {
   protected async getCss(options: ImageOptions) {
-    const { image, opacity, blur, grayscale, contrast } = options;
+    const { image, opacity } = options;
 
     return css`
       ${BODY_SELECTOR} {

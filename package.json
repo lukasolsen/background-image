@@ -27,6 +27,10 @@
       {
         "command": "background-image.uninstall",
         "title": "Uninstall"
+      },
+      {
+        "command": "background-image.dev-reset",
+        "title": "Dev Reset"
       }
     ],
     "configuration": {
@@ -46,12 +50,8 @@
         },
         "background-image.opacity": {
           "type": "number",
-          "default": 0.5,
+          "default": 0.91,
           "description": "Opacity of the background image"
-        },
-        "background-image.blur": {
-          "type": "number",
-          "default": 0
         }
       }
     }
