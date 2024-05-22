@@ -6,9 +6,9 @@ This is made only for simple purposes so no advanced features have been though o
 
 ## Features
 
-## ![Configurations](./assets/image.png)
+## ![Configurations](https://cdn.discordapp.com/attachments/1233909344932987033/1242790444421611612/image.png?ex=664f1e4b&is=664dcccb&hm=a28acf6bad2cd02ce8e13f320492bf41738fd354c67651100160867d8a321ae6&)
 
-![Background](./assets/image-1.png)
+![Background](https://cdn.discordapp.com/attachments/1233909344932987033/1242790459156332544/image-1.png?ex=664f1e4f&is=664dcccf&hm=df9cb5272f9a6235fd4f6e7ec58bc1211f4de4a815473d6a0dde372f3083ef74&)
 
 ## Requirements
 
