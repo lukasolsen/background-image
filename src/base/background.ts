@@ -34,6 +34,20 @@ export class Background implements Disposable {
     }
   }
 
+  public async uninstall(): Promise<void> {
+    try {
+      let cssContent = await this.cssFile.getContent();
+      cssContent = this.cssFile.clearContent(cssContent);
+
+      if (await this.cssFile.saveContent(cssContent)) {
+        Log("INFO", "Background image uninstalled successfully.");
+      }
+    } catch (e: any) {
+      Log("ERROR", e.message);
+      unlock();
+    }
+  }
+
   public dispose() {
     this.disposes.forEach((d) => d.dispose());
   }

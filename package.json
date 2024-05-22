@@ -19,6 +19,14 @@
       {
         "command": "background-image.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "background-image.selectImage",
+        "title": "Select Image"
+      },
+      {
+        "command": "background-image.uninstall",
+        "title": "Uninstall"
       }
     ],
     "configuration": {
@@ -27,9 +35,7 @@
         "background-image.images": {
           "type": "array",
           "default": [
-            "https://lh3.googleusercontent.com/drive-viewer/AKGpihbHfbd-FCo1dYmZwMNnSMIcA4Hz3QGNLFBjRpxAQ4YSpKzir_ysdbx5JOHIfLIodCwH84gu3n1cldFDukF_4a1QeV0bspucGQ=w1960-h4204-rw-v1",
-            "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihbOvFqWgq37yAevhF3FPutF6ViXPvRsi0-afasdBDa7kse-o2z9ywDNU9VdqtNBxMF1IoekvXXzHpc5xlDEENxq_O9u5Vo4Gv4=w1920-h945-rw-v1",
-            "https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpihZVN3jFXgTuZ5fxMJCmzR6d0pYn9mn7xNu9f3uSjFGNFFihWicViiN4oc3Smlv7tpE6iuuCH2eAxUcflDD6McH98nrhHuvPaBI=w1920-h945-rw-v1"
+            "https://gitlab.com/kalilinux/packages/kali-wallpapers/-/raw/kali/master/2024/backgrounds/kali/kali-metal-dark-16x9.png?ref_type=heads"
           ],
           "description": "List of images to use as background"
         },
