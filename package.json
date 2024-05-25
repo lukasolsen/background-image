@@ -21,14 +21,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "background-image.nextImage",
-        "title": "Next Image"
-      },
-      {
-        "command": "background-image.previousImage",
-        "title": "Previous Image"
-      },
-      {
         "command": "background-image.uninstall",
         "title": "Uninstall"
       },
