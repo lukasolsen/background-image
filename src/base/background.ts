@@ -1,5 +1,4 @@
-import vscode, { Disposable } from "vscode";
-import { ImageOptions } from "../types/imageOptions";
+import { Disposable } from "vscode";
 import { CssGenerator } from "./cssGenerator";
 import { Log } from "../log/logger";
 import { CssFile } from "./CssFile";
@@ -13,6 +12,8 @@ export class Background implements Disposable {
 
   public async install(): Promise<void> {
     try {
+      await this.cssFile.backup();
+
       const css = (
         await CssGenerator.create({
           image: configLoader.getCurrentlySelectedImage(),

@@ -33,13 +33,7 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand("background-image.refresh", async () => {
     await backgroundProcess.refresh();
 
-    vscode.window
-      .showInformationMessage("Background image updated.", "Reload Window")
-      .then((selection) => {
-        if (selection === "Reload Window") {
-          vscode.commands.executeCommand("workbench.action.reloadWindow");
-        }
-      });
+    vscode.commands.executeCommand("workbench.action.reloadWindow");
   });
 
   vscode.commands.registerCommand("background-image.dev-reset", async () => {
@@ -91,15 +85,18 @@ export async function activate(context: vscode.ExtensionContext) {
   // check if the user has changed their configuration then do the refresh
   vscode.workspace.onDidChangeConfiguration(async (event) => {
     if (event.affectsConfiguration("background-image")) {
-      await backgroundProcess.refresh();
+      // Introduce a delay to ensure all changes have been applied
+      setTimeout(async () => {
+        await backgroundProcess.refresh();
 
-      vscode.window
-        .showInformationMessage("Background image updated.", "Reload Window")
-        .then((selection) => {
-          if (selection === "Reload Window") {
-            vscode.commands.executeCommand("workbench.action.reloadWindow");
-          }
-        });
+        vscode.window
+          .showInformationMessage("Background image updated.", "Reload Window")
+          .then((selection) => {
+            if (selection === "Reload Window") {
+              vscode.commands.executeCommand("workbench.action.reloadWindow");
+            }
+          });
+      }, 1000);
     }
   });
 }

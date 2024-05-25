@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "publisher": "codevault",
   "engines": {
-    "vscode": "1.88.1"
+    "vscode": "1.89.1"
   },
   "categories": [
     "Other"
