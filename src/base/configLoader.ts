@@ -1,33 +1,38 @@
-import vscode from "vscode";
-import { Log } from "../log/logger";
+import * as vscode from "vscode";
 
-export class ConfigLoader { 
-  public config: vscode.WorkspaceConfiguration;
+export class ConfigLoader {
+  private config: vscode.WorkspaceConfiguration;
+  private imageCache: Map<number, string> | null = null;
 
-  constructor(configurationName: string) {
-    this.config = vscode.workspace.getConfiguration(
-      configurationName || "background-image"
-    );
+  constructor(configurationName: string = "background-image") {
+    this.config = vscode.workspace.getConfiguration(configurationName);
   }
 
   private getValue<T>(key: string): T {
     return this.config.get<T>(key)!;
   }
 
-  private updateValue(key: string, value: any) {
-    return this.config.update(key, value, vscode.ConfigurationTarget.Global);
+  private async updateValue(key: string, value: any) {
+    await this.config.update(key, value, vscode.ConfigurationTarget.Global);
   }
 
-  public getImages(): string[] {
-    return this.getValue<string[]>("images");
+  public getImages(): Map<number, string> {
+    if (this.imageCache) {
+      return this.imageCache;
+    }
+
+    const images = this.getValue<string[]>("images");
+    this.imageCache = new Map(images.map((image, index) => [index, image]));
+
+    return this.imageCache;
   }
 
   public getSelectedImage(): number {
     return this.getValue<number>("selectedImage");
   }
 
-  public getCurrentlySelectedImage(): string {
-    return this.getImages()[this.getSelectedImage()];
+  public getCurrentlySelectedImage(): string | undefined {
+    return this.getImages().get(this.getSelectedImage());
   }
 
   public getOpacity(): number {
@@ -35,18 +40,20 @@ export class ConfigLoader {
   }
 
   public async updateSelectedImage(value: number) {
-    return this.updateValue("selectedImage", value);
+    await this.updateValue("selectedImage", value);
   }
 
   public async updateOpacity(value: number) {
-    return this.updateValue("opacity", value);
+    await this.updateValue("opacity", value);
   }
 
   public async updateImages(value: string[]) {
-    return this.updateValue("images", value);
+    this.imageCache = null; // Invalidate cache
+    await this.updateValue("images", value);
   }
 
   public findImageByName(name: string): number {
-    return this.getImages().findIndex((image) => image === name);
+    const images = Array.from(this.getImages().values());
+    return images.indexOf(name);
   }
 }

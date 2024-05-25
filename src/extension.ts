@@ -32,12 +32,15 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   vscode.commands.registerCommand("background-image.select", async () => {
-    const items: vscode.QuickPickItem[] = configLoader
-      .getImages()
-      .map((img) => ({
-        label: img,
-        picked: img === configLoader.getCurrentlySelectedImage(),
-      }));
+    const items: vscode.QuickPickItem[] = Array.from(
+      configLoader.getImages()
+    ).map(([index, image]) => {
+      return {
+        label: image,
+        description:
+          index === configLoader.getSelectedImage() ? "Selected" : "",
+      };
+    });
 
     const picker = vscode.window.showQuickPick(items, {
       canPickMany: false,
@@ -110,7 +113,6 @@ export async function activate(context: vscode.ExtensionContext) {
       });
   });
 
-  // check if the user has changed their configuration then do the refresh
   vscode.workspace.onDidChangeConfiguration(async (event) => {
     if (event.affectsConfiguration("background-image")) {
       // Introduce a delay to ensure all changes have been applied
