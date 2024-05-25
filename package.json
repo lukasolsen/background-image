@@ -21,6 +21,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "background-image.select",
+        "title": "Select Image"
+      },
+      {
         "command": "background-image.uninstall",
         "title": "Uninstall"
       },

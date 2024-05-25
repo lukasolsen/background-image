@@ -1,3 +1,4 @@
+import * as vscode from "vscode";
 import { Disposable } from "vscode";
 import { CssGenerator } from "./cssGenerator";
 import { Log } from "../log/logger";
@@ -57,8 +58,23 @@ export class Background implements Disposable {
 
   public async refresh(): Promise<void> {
     try {
-      await this.uninstall();
-      await this.install();
+      let cssContent = await this.cssFile.getContent();
+      cssContent = this.cssFile.clearContent(cssContent);
+
+      const css = (
+        await CssGenerator.create({
+          image: configLoader.getCurrentlySelectedImage(),
+          opacity: configLoader.getOpacity(),
+        })
+      ).trimEnd();
+
+      cssContent += css;
+
+      if (await this.cssFile.saveContent(cssContent)) {
+        Log("INFO", "Background image refreshed successfully.");
+      }
+
+      await vscode.commands.executeCommand("workbench.action.reloadWindow");
     } catch (e: any) {
       Log("ERROR", e.message);
       unlock();

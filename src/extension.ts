@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { Log } from "./log/logger";
 import { Background } from "./base/background";
 import * as pgk from "../package.json";
+import { configLoader } from "./constants/base";
 
 export async function activate(context: vscode.ExtensionContext) {
   const version = pgk.version;
@@ -29,6 +30,33 @@ export async function activate(context: vscode.ExtensionContext) {
     await backgroundProcess.install();
     context.subscriptions.push(backgroundProcess);
   }
+
+  vscode.commands.registerCommand("background-image.select", async () => {
+    const items: vscode.QuickPickItem[] = configLoader
+      .getImages()
+      .map((img) => ({
+        label: img,
+        picked: img === configLoader.getCurrentlySelectedImage(),
+      }));
+
+    const picker = vscode.window.showQuickPick(items, {
+      canPickMany: false,
+      placeHolder: "Select an image",
+    });
+
+    picker.then(async (selection) => {
+      if (selection) {
+        Log("INFO", `Selected image: ${selection.label}`);
+
+        const index = configLoader.findImageByName(selection.label);
+        Log("INFO", `Selected image index: ${index}`);
+        await configLoader.updateSelectedImage(index);
+        await backgroundProcess.refresh();
+
+        vscode.commands.executeCommand("workbench.action.reloadWindow");
+      }
+    });
+  });
 
   vscode.commands.registerCommand("background-image.refresh", async () => {
     await backgroundProcess.refresh();

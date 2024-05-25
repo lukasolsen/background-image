@@ -1,6 +1,7 @@
 import vscode from "vscode";
+import { Log } from "../log/logger";
 
-export class ConfigLoader {
+export class ConfigLoader { 
   public config: vscode.WorkspaceConfiguration;
 
   constructor(configurationName: string) {
@@ -14,7 +15,7 @@ export class ConfigLoader {
   }
 
   private updateValue(key: string, value: any) {
-    return this.config.update(key, value);
+    return this.config.update(key, value, vscode.ConfigurationTarget.Global);
   }
 
   public getImages(): string[] {
@@ -43,5 +44,9 @@ export class ConfigLoader {
 
   public async updateImages(value: string[]) {
     return this.updateValue("images", value);
+  }
+
+  public findImageByName(name: string): number {
+    return this.getImages().findIndex((image) => image === name);
   }
 }
