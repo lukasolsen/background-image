@@ -2,7 +2,7 @@
   "name": "backgroundimage",
   "displayName": "Background Image",
   "description": "A fun simple background extension for vscode which allows users to manage their backgrounds with images",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "publisher": "codevault",
   "engines": {
     "vscode": "1.89.1"
