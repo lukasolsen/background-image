@@ -1,18 +1,26 @@
-import vscode, { Disposable } from "vscode";
-import { ImageOptions } from "../types/imageOptions";
+import * as vscode from "vscode";
+import { Disposable } from "vscode";
 import { CssGenerator } from "./cssGenerator";
 import { Log } from "../log/logger";
 import { CssFile } from "./CssFile";
 import { vscodePath } from "../constants/vscodePaths";
 import { unlock } from "../log/file";
+import { configLoader } from "../constants/base";
 
 export class Background implements Disposable {
   private disposes: Disposable[] = [];
   public cssFile = new CssFile(vscodePath.cssPath);
 
-  public async install(imageOptions: ImageOptions): Promise<void> {
+  public async install(): Promise<void> {
     try {
-      const css = (await CssGenerator.create(imageOptions)).trimEnd();
+      await this.cssFile.backup();
+
+      const css = (
+        await CssGenerator.create({
+          image: configLoader.getCurrentlySelectedImage() as string,
+          opacity: configLoader.getOpacity(),
+        })
+      ).trimEnd();
 
       Log("DEBUG", `CSS: ${css}`);
 
@@ -48,10 +56,25 @@ export class Background implements Disposable {
     }
   }
 
-  public async refresh(imageOptions: ImageOptions): Promise<void> {
+  public async refresh(): Promise<void> {
     try {
-      await this.uninstall();
-      await this.install(imageOptions);
+      let cssContent = await this.cssFile.getContent();
+      cssContent = this.cssFile.clearContent(cssContent);
+
+      const css = (
+        await CssGenerator.create({
+          image: configLoader.getCurrentlySelectedImage() as string,
+          opacity: configLoader.getOpacity(),
+        })
+      ).trimEnd();
+
+      cssContent += css;
+
+      if (await this.cssFile.saveContent(cssContent)) {
+        Log("INFO", "Background image refreshed successfully.");
+      }
+
+      await vscode.commands.executeCommand("workbench.action.reloadWindow");
     } catch (e: any) {
       Log("ERROR", e.message);
       unlock();

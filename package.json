@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "publisher": "codevault",
   "engines": {
-    "vscode": "1.88.1"
+    "vscode": "1.89.1"
   },
   "categories": [
     "Other"
@@ -21,12 +21,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "background-image.nextImage",
-        "title": "Next Image"
-      },
-      {
-        "command": "background-image.previousImage",
-        "title": "Previous Image"
+        "command": "background-image.select",
+        "title": "Select Image"
       },
       {
         "command": "background-image.uninstall",
@@ -39,6 +35,10 @@
       {
         "command": "background-image.refresh",
         "title": "Refresh"
+      },
+      {
+        "command": "background-image.select-image",
+        "title": "Select This Image"
       }
     ],
     "configuration": {
@@ -62,6 +62,15 @@
           "description": "Opacity of the background image"
         }
       }
+    },
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceScheme == 'file'",
+          "command": "background-image.select-image",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "scripts": {

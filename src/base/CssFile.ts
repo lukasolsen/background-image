@@ -17,6 +17,17 @@ export enum ECSSEditType {
 export class CssFile {
   constructor(private filePath: string) {}
 
+  public async backup(): Promise<boolean> {
+    try {
+      const content = await this.getContent();
+      await fs.promises.writeFile(`${this.filePath}.bak`, content, "utf-8");
+      return true;
+    } catch (e: any) {
+      Log("ERROR", e.message);
+      return false;
+    }
+  }
+
   public async getEditType(): Promise<ECSSEditType> {
     if (!(await this.hasInstalled())) {
       return ECSSEditType.NoModified;
