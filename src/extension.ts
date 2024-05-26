@@ -12,10 +12,27 @@ export async function activate(context: vscode.ExtensionContext) {
     `backgroundImage-${version}-firstTime`,
     true
   );
+  const supportedImageExtensions = context.globalState.get(
+    "supportedImageExtensions",
+    []
+  );
+
+  Log(
+    "DEBUG",
+    "Supported image extensions: " + supportedImageExtensions.join(", ")
+  );
 
   if (firstTime) {
     Log("INFO", "Users first time loading the extension. Installing...");
     context.globalState.update(`backgroundImage-${version}-firstTime`, false);
+    context.globalState.update("supportedImageExtensions", [
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "bmp",
+      "webp",
+    ]);
     vscode.window
       .showInformationMessage(
         "Thank you for installing Background Image! You can configure the extension in the settings.",
@@ -112,6 +129,16 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       });
   });
+
+  vscode.commands.registerCommand(
+    "background-image.select-image",
+    async (file) => {
+      Log("INFO", file);
+      const images = Array.from(configLoader.getImages().values());
+      images.push(file);
+      Log("INFO", images.map((image) => image).join(", "));
+    }
+  );
 
   vscode.workspace.onDidChangeConfiguration(async (event) => {
     if (event.affectsConfiguration("background-image")) {

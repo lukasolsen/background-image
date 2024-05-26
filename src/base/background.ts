@@ -17,7 +17,7 @@ export class Background implements Disposable {
 
       const css = (
         await CssGenerator.create({
-          image: configLoader.getCurrentlySelectedImage(),
+          image: configLoader.getCurrentlySelectedImage() as string,
           opacity: configLoader.getOpacity(),
         })
       ).trimEnd();
@@ -63,7 +63,7 @@ export class Background implements Disposable {
 
       const css = (
         await CssGenerator.create({
-          image: configLoader.getCurrentlySelectedImage(),
+          image: configLoader.getCurrentlySelectedImage() as string,
           opacity: configLoader.getOpacity(),
         })
       ).trimEnd();
