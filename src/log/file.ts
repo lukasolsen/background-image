@@ -1,34 +1,36 @@
-import lockfile from "lockfile";
-import path from "path";
+import path from "node:path";
+import { lock, unlock } from "lockfile";
 import pgk from "../../package.json";
 
-export function lock() {
+export const lockfile = (): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
-    lockfile.lock(
-      path.join(__dirname, "../../", `${pgk.publisher + "." + pgk.name}.lock`),
+    lock(
+      path.join(__dirname, "../../", `${pgk.publisher}.${pgk.name}.lock`),
       {
-        wait: 5000, // 应该能撑200的并发了，，，>_<#@!
+        wait: 5000,
       },
-      (err: any) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve();
-      }
-    );
-  });
-}
-
-export function unlock() {
-  return new Promise<void>((resolve, reject) => {
-    lockfile.unlock(
-      path.join(__dirname, "../../", `${pgk.publisher + "." + pgk.name}.lock`),
       (err) => {
         if (err) {
-          return reject(err);
+          reject(err);
+          return;
         }
         resolve();
       }
     );
   });
-}
+};
+
+export const unlockfile = (): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    unlock(
+      path.join(__dirname, "../../", `${pgk.publisher}.${pgk.name}.lock`),
+      (err) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      }
+    );
+  });
+};

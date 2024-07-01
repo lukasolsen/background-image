@@ -1,6 +1,6 @@
 import vscode from "vscode";
-import { AbsCssGenerator, css } from "./CssGenerator.base";
-import { ImageOptions } from "../../types/imageOptions";
+import { type ImageOptions } from "../../types/image-options";
+import { AbsCssGenerator, css } from "./css-generator.base";
 
 // 从 1.78.0 开始使用 Chromium:108+，支持 :has 选择器
 const BODY_SELECTOR =
@@ -9,7 +9,7 @@ const BODY_SELECTOR =
     : "body";
 
 export class DefaultCssGenerator extends AbsCssGenerator {
-  protected async getCss(options: ImageOptions) {
+  protected getCss(options: ImageOptions): string {
     const { image, opacity } = options;
 
     return css`

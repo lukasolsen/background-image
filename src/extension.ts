@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-floating-promises -- no dup */
 import * as vscode from "vscode";
+import * as pgk from "../package.json";
 import { Log } from "./log/logger";
 import { Background } from "./base/background";
-import * as pgk from "../package.json";
 import { configLoader } from "./constants/base";
 
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(
+  context: vscode.ExtensionContext
+): Promise<void> {
   const version = pgk.version;
 
   const backgroundProcess = new Background();
-  const firstTime = context.globalState.get(
+  const firstTime: boolean = context.globalState.get(
     `backgroundImage-${version}-firstTime`,
     true
   );
@@ -19,9 +22,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
   Log(
     "DEBUG",
-    "Supported image extensions: " + supportedImageExtensions.join(", ")
+    `Supported image extensions: ${supportedImageExtensions.join(", ")}`
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- This is necessary
   if (firstTime) {
     Log("INFO", "Users first time loading the extension. Installing...");
     context.globalState.update(`backgroundImage-${version}-firstTime`, false);
@@ -47,8 +51,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await backgroundProcess.install();
     context.subscriptions.push(backgroundProcess);
   }
-
-  vscode.commands.registerCommand("background-image.select", async () => {
+  vscode.commands.registerCommand("background-image.select", (): void => {
     const items: vscode.QuickPickItem[] = Array.from(
       configLoader.getImages()
     ).map(([index, image]) => {
@@ -69,7 +72,7 @@ export async function activate(context: vscode.ExtensionContext) {
         Log("INFO", `Selected image: ${selection.label}`);
 
         const index = configLoader.findImageByName(selection.label);
-        Log("INFO", `Selected image index: ${index}`);
+        Log("INFO", `Selected image index: ${String(index)}`); // Convert index to string
         await configLoader.updateSelectedImage(index);
         await backgroundProcess.refresh();
 
@@ -115,7 +118,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // remove it
     await vscode.commands.executeCommand(
       "workbench.extensions.uninstallExtension",
-      pgk.publisher + "." + pgk.name
+      `${pgk.publisher}.${pgk.name}`
     );
 
     vscode.window
@@ -132,7 +135,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.commands.registerCommand(
     "background-image.select-image",
-    async (file) => {
+    (file: string): void => {
       Log("INFO", file);
       const images = Array.from(configLoader.getImages().values());
       images.push(file);
@@ -140,11 +143,11 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  vscode.workspace.onDidChangeConfiguration(async (event) => {
+  vscode.workspace.onDidChangeConfiguration((event): void => {
     if (event.affectsConfiguration("background-image")) {
       // Introduce a delay to ensure all changes have been applied
-      setTimeout(async () => {
-        await backgroundProcess.refresh();
+      setTimeout(() => {
+        backgroundProcess.refresh();
 
         vscode.window
           .showInformationMessage("Background image updated.", "Reload Window")
@@ -157,5 +160,3 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   });
 }
-
-export function deactivate() {}
