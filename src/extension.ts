@@ -15,6 +15,7 @@ export async function activate(
     `backgroundImage-${version}-firstTime`,
     true
   );
+
   const supportedImageExtensions = context.globalState.get(
     "supportedImageExtensions",
     []
@@ -51,6 +52,7 @@ export async function activate(
     await backgroundProcess.install();
     context.subscriptions.push(backgroundProcess);
   }
+
   vscode.commands.registerCommand("background-image.select", (): void => {
     const items: vscode.QuickPickItem[] = Array.from(
       configLoader.getImages()
@@ -74,17 +76,12 @@ export async function activate(
         const index = configLoader.findImageByName(selection.label);
         Log("INFO", `Selected image index: ${String(index)}`); // Convert index to string
         await configLoader.updateSelectedImage(index);
-        await backgroundProcess.refresh();
-
-        vscode.commands.executeCommand("workbench.action.reloadWindow");
       }
     });
   });
 
   vscode.commands.registerCommand("background-image.refresh", async () => {
     await backgroundProcess.refresh();
-
-    vscode.commands.executeCommand("workbench.action.reloadWindow");
   });
 
   vscode.commands.registerCommand("background-image.dev-reset", async () => {
@@ -159,4 +156,8 @@ export async function activate(
       }, 1000);
     }
   });
+}
+
+export function deactivate(): void {
+  Log("INFO", "Deactivating extension.");
 }
