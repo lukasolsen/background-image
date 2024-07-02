@@ -80,6 +80,17 @@ export async function activate(
     });
   });
 
+  vscode.commands.registerCommand(
+    "background-image.select-image",
+    (image: string): void => {
+      Log("INFO", `Selected image: ${image}`);
+
+      const index = configLoader.findImageByName(image);
+      Log("INFO", `Selected image index: ${String(index)}`); // Convert index to string
+      configLoader.updateSelectedImage(index);
+    }
+  );
+
   vscode.commands.registerCommand("background-image.refresh", async () => {
     await backgroundProcess.refresh();
   });
@@ -130,16 +141,6 @@ export async function activate(
       });
   });
 
-  vscode.commands.registerCommand(
-    "background-image.select-image",
-    (file: string): void => {
-      Log("INFO", file);
-      const images = Array.from(configLoader.getImages().values());
-      images.push(file);
-      Log("INFO", images.map((image) => image).join(", "));
-    }
-  );
-
   vscode.workspace.onDidChangeConfiguration((event): void => {
     if (event.affectsConfiguration("background-image")) {
       // Introduce a delay to ensure all changes have been applied
@@ -156,6 +157,42 @@ export async function activate(
       }, 1000);
     }
   });
+
+  class ImageGridDataProvider {
+    private images: { title: string; url: string }[];
+
+    constructor() {
+      this.images = Array.from(configLoader.getImages()).map(
+        ([_index, image]) => {
+          return {
+            title: image,
+            url: image,
+          };
+        }
+      );
+    }
+
+    getTreeItem(element: { title: string; url: string }): vscode.TreeItem {
+      return {
+        label: element.title,
+        iconPath: vscode.Uri.parse(element.url),
+        command: {
+          command: "background-image.select-image",
+          title: "Set Image Background",
+          arguments: [element.url],
+        },
+      };
+    }
+
+    getChildren(): { title: string; url: string }[] {
+      return this.images;
+    }
+  }
+
+  vscode.window.registerTreeDataProvider(
+    "backgroundImageSelector",
+    new ImageGridDataProvider()
+  );
 }
 
 export function deactivate(): void {

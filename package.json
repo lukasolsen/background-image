@@ -25,6 +25,10 @@
         "title": "Select Image"
       },
       {
+        "command": "background-image.select-image",
+        "title": "Select Specific Image"
+      },
+      {
         "command": "background-image.uninstall",
         "title": "Uninstall"
       },
@@ -35,10 +39,6 @@
       {
         "command": "background-image.refresh",
         "title": "Refresh"
-      },
-      {
-        "command": "background-image.select-image",
-        "title": "Select This Image"
       }
     ],
     "configuration": {
@@ -69,6 +69,20 @@
           "when": "resourceScheme == 'file'",
           "command": "background-image.select-image",
           "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "background-image.select",
+          "group": "navigation"
+        }
+      ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "backgroundImageSelector",
+          "name": "Background Image Selector"
         }
       ]
     }
