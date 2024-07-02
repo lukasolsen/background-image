@@ -4,6 +4,7 @@ import * as pgk from "../package.json";
 import { Log } from "./log/logger";
 import { Background } from "./base/background";
 import { configLoader } from "./constants/base";
+import { ImageGridDataProvider } from "./provider";
 
 export async function activate(
   context: vscode.ExtensionContext
@@ -82,12 +83,12 @@ export async function activate(
 
   vscode.commands.registerCommand(
     "background-image.select-image",
-    (image: string): void => {
+    async (image: string): Promise<void> => {
       Log("INFO", `Selected image: ${image}`);
 
       const index = configLoader.findImageByName(image);
       Log("INFO", `Selected image index: ${String(index)}`); // Convert index to string
-      configLoader.updateSelectedImage(index);
+      await configLoader.updateSelectedImage(index);
     }
   );
 
@@ -157,37 +158,6 @@ export async function activate(
       }, 1000);
     }
   });
-
-  class ImageGridDataProvider {
-    private images: { title: string; url: string }[];
-
-    constructor() {
-      this.images = Array.from(configLoader.getImages()).map(
-        ([_index, image]) => {
-          return {
-            title: image,
-            url: image,
-          };
-        }
-      );
-    }
-
-    getTreeItem(element: { title: string; url: string }): vscode.TreeItem {
-      return {
-        label: element.title,
-        iconPath: vscode.Uri.parse(element.url),
-        command: {
-          command: "background-image.select-image",
-          title: "Set Image Background",
-          arguments: [element.url],
-        },
-      };
-    }
-
-    getChildren(): { title: string; url: string }[] {
-      return this.images;
-    }
-  }
 
   vscode.window.registerTreeDataProvider(
     "backgroundImageSelector",
