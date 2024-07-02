@@ -1,4 +1,4 @@
-export type ImageOptions = {
+export interface ImageOptions {
   image: string;
   opacity: number;
-};
+}

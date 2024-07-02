@@ -2,7 +2,7 @@ import { LogChannel } from "../constants/base";
 
 type LogTypes = "INFO" | "ERROR" | "DEBUG";
 
-export const Log = (type: LogTypes, message: string) => {
+export const Log = (type: LogTypes, message: string): void => {
   switch (type) {
     case "INFO":
       LogChannel.appendLine(`[INFO] ${message}`);

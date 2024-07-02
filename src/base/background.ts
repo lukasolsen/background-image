@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
-import { Disposable } from "vscode";
-import { CssGenerator } from "./cssGenerator";
+import { type Disposable } from "vscode";
 import { Log } from "../log/logger";
-import { CssFile } from "./CssFile";
-import { vscodePath } from "../constants/vscodePaths";
-import { unlock } from "../log/file";
+import { vscodePath } from "../constants/vscode-paths";
+import { unlockfile } from "../log/file";
 import { configLoader } from "../constants/base";
+import { CssFile } from "./css-file";
+import { CssGenerator } from "./css-generator";
 
 export class Background implements Disposable {
   private disposes: Disposable[] = [];
@@ -17,8 +17,8 @@ export class Background implements Disposable {
 
       const css = (
         await CssGenerator.create({
-          image: configLoader.getCurrentlySelectedImage() as string,
-          opacity: configLoader.getOpacity(),
+          image: configLoader.getCurrentlySelectedImage()?.toString() ?? "",
+          opacity: configLoader.getOpacity() ?? 1,
         })
       ).trimEnd();
 
@@ -36,9 +36,9 @@ export class Background implements Disposable {
       if (await this.cssFile.saveContent(cssContent)) {
         Log("INFO", "Background image installed successfully.");
       }
-    } catch (e: any) {
-      Log("ERROR", e.message);
-      unlock();
+    } catch (e: unknown) {
+      Log("ERROR", (e as Error).message);
+      void unlockfile();
     }
   }
 
@@ -50,9 +50,9 @@ export class Background implements Disposable {
       if (await this.cssFile.saveContent(cssContent)) {
         Log("INFO", "Background image uninstalled successfully.");
       }
-    } catch (e: any) {
-      Log("ERROR", e.message);
-      unlock();
+    } catch (e: unknown) {
+      Log("ERROR", (e as Error).message);
+      void unlockfile();
     }
   }
 
@@ -63,8 +63,8 @@ export class Background implements Disposable {
 
       const css = (
         await CssGenerator.create({
-          image: configLoader.getCurrentlySelectedImage() as string,
-          opacity: configLoader.getOpacity(),
+          image: configLoader.getCurrentlySelectedImage()?.toString() ?? "",
+          opacity: configLoader.getOpacity() ?? 1,
         })
       ).trimEnd();
 
@@ -75,13 +75,14 @@ export class Background implements Disposable {
       }
 
       await vscode.commands.executeCommand("workbench.action.reloadWindow");
-    } catch (e: any) {
-      Log("ERROR", e.message);
-      unlock();
+    } catch (e: unknown) {
+      Log("ERROR", (e as Error).message);
+      void unlockfile();
     }
   }
 
-  public dispose() {
+  public dispose(): void {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- Disposes are not returning anything
     this.disposes.forEach((d) => d.dispose());
   }
 }

@@ -6,6 +6,13 @@
     "sourceMap": true,
     "rootDir": "src",
     "strict": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "strictNullChecks": true,
+    "skipLibCheck": true
   }
 }
