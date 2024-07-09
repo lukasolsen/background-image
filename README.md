@@ -12,7 +12,7 @@ This is made only for simple purposes so no advanced features have been though o
 
 ## Requirements
 
-- `Requires a VSCode version above 1.88.1`
+- `Requires a VSCode version above 1.90.0`
 
 ## Extension Settings
 
